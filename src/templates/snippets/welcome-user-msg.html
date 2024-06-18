@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+<div>
+    {% if request.user.is_authenticated %}
+    You are a user
+    {% else %}
+    You are not a user
+    {% endif %}
+</div>
