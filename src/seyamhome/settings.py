@@ -6,7 +6,15 @@ SECRET_KEY = "django-insecure-=y5$_0%0v5s(i^b=$qe#vov$bf)1ki^28=oz3ya(4sk2#v+iro
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    ".railway.app"  # https://saas.prod.railway.app
+]
+
+if DEBUG:
+    ALLOWED_HOSTS += [
+        "localhost",
+        "127.0.0.1",
+    ]
 
 INSTALLED_APPS = [
     # django-apps
