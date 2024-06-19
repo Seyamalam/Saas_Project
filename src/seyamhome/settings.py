@@ -4,6 +4,26 @@ from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Email Config
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = config("EMAIL_HOST", cast=str, default="smtp.gmail.com")
+EMAIL_PORT = config("EMAIL_PORT", cast=str, default="587")  # Recommended
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", cast=str, default=None)
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", cast=str, default=None)
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", cast=bool, default=True)  # Use EMAIL_PORT 587 for TLS
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", cast=bool, default=False)  # Use MAIL_PORT 465 for SSL
+ADMIN_USER_NAME = config("ADMIN_USER_NAME", default="Admin user")
+ADMIN_USER_EMAIL = config("ADMIN_USER_EMAIL", default=None)
+
+MANAGERS = []
+ADMINS = []
+if all([ADMIN_USER_NAME, ADMIN_USER_EMAIL]):
+    # 500 errors are emailed to these users
+    ADMINS += [
+        (f'{ADMIN_USER_NAME}', f'{ADMIN_USER_EMAIL}')
+    ]
+    MANAGERS = ADMINS
+
 SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 # DEBUG = str(os.environ.get("DJANGO_DEBUG")).lower() == "true"
@@ -72,11 +92,12 @@ CONN_MAX_AGE = config("CONN_MAX_AGE", cast=int, default=30)
 DATABASE_URL = config("DATABASE_URL", default=None)
 if DATABASE_URL is not None:
     import dj_database_url
+
     DATABASES = {
         "default": dj_database_url.config(
             default=DATABASE_URL,
             conn_max_age=CONN_MAX_AGE,
-            conn_health_checks=True,)
+            conn_health_checks=True, )
     }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -101,7 +122,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
 
 STATIC_URL = "static/"
 STATICFILES_BASE_DIR = BASE_DIR / "staticfiles"
